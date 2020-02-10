@@ -1,0 +1,45 @@
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <title>多种文档下载器</title>
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/path/to/bootstrap/css/bootstrap.css" />
+
+    <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+    <div class="container">
+        <div class="jumbotron">
+            <h1>欢迎</h1>
+            <p>本项目支持豆丁、淘豆、道客巴巴、金锄头、新浪爱问、原创力网站的文档下载。注：仅支持免费预览文档，且下载下来的均转换为PDF格式，非原格式及原文档</p>
+            <p>
+                <a href='https://github.com/rty813/doc_downloader'>本项目地址：https://github.com/rty813/doc_downloader</a>
+            </p>
+            <p>在下方粘贴要下载的网址，点击下载，耐心等待即可。</p>
+        </div>
+
+        <form class="form-horizontal" role="form" method="POST" enctype="multipart/form-data">
+            <div class="form-group">
+                <div class="col-sm-10">
+                    <div class="input-group">
+                        <span class="input-group-addon">网址：</span>
+                        <input class="form-control" name="url" id=url" placeholder="在此处粘贴要下载的文档的网址" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-10">
+                    <button type="submit" class="btn btn-info btn-lg">
+                        <span class="glyphicon glyphicon-ok-circle"></span> 下载
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</body>
+
+</html>

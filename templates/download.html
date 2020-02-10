@@ -1,0 +1,115 @@
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <title>多种文档下载器</title>
+    <link rel="stylesheet" href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">
+
+    <script src="http://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="{{ url_for('static', filename='nanobar.min.js') }}"></script>
+
+</head>
+
+<body>
+    <div class="container">
+        <div class="jumbotron">
+            <h1>欢迎</h1>
+            <p>本项目支持豆丁、淘豆、道客巴巴、金锄头、新浪爱问、原创力网站的文档下载。注：仅支持免费预览文档，且下载下来的均转换为PDF格式，非原格式及原文档</p>
+            <p>
+                <a href='https://github.com/rty813/doc_downloader'>本项目地址：https://github.com/rty813/doc_downloader</a>
+            </p>
+            <p>在下方粘贴要下载的网址，点击下载，耐心等待即可。</p>
+        </div>
+
+        <div class="form-horizontal">
+            <div class="form-group">
+                <div class="col-sm-10">
+                    <div class="input-group">
+                        <span class="input-group-addon">网址：</span>
+                        <input class="form-control" name="url" id="url" placeholder="在此处粘贴要下载的文档的网址" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-10">
+                    <button id="start-bg-job" class="btn btn-info btn-lg">
+                        <span class="glyphicon glyphicon-ok-circle"></span> 下载
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="progress progress-striped active">
+            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="60" aria-valuemin="0"
+                aria-valuemax="100" style="width: 0%;" id="progressbar">
+            </div>
+        </div>
+
+        <div id="progress"></div>
+    </div>
+
+</body>
+
+
+
+</html>
+
+<script>
+    // 按钮点击事件
+    $(function () {
+        $('#start-bg-job').click(start_long_task);
+    });
+    // 请求 longtask 接口
+    function start_long_task() {
+        // 添加元素在html中
+        div = $('<div><div></div><div>0%</div><div>...</div><div> </div></div><hr>');
+        $('#progress').prepend(div);
+        // ajax请求longtask
+        $.ajax({
+            type: 'POST',
+            data: { 'url': $("#url").val() },
+            url: '/longtask',
+            // 获得数据，从响应头中获取Location
+            success: function (data, status, request) {
+                status_url = request.getResponseHeader('Location');
+                // 调用 update_progress() 方法更新进度条
+                update_progress(status_url, div[0]);
+            },
+            error: function () {
+                alert('Unexpected error');
+            }
+        });
+    }
+    // 更新进度条
+    function update_progress(status_url, status_div) {
+        // getJSON()方法是JQuery内置方法，这里向Location中对应的url发起请求，即请求「/status/<task_id>」
+        $.getJSON(status_url, function (data) {
+            // 计算进度
+            percent = parseInt(data['current'] * 100 / data['total']);
+            // 更新进度条
+            $("#progressbar").attr("style", "width: " + percent + "%;");
+            // 更新文字
+            $(status_div.childNodes[1]).text(percent + '%');
+            $(status_div.childNodes[2]).text(data['status']);
+            if (data['status'] == '下载成功') {
+                window.location.href = "http://jdoufu.xyz/file?name=" + data['result'];
+            }
+            if (data['state'] != 'PENDING' && data['state'] != 'PROGRESS') {
+                if ('result' in data) {
+                    // 展示结果
+                    $(status_div.childNodes[3]).text('Result: ' + data['result']);
+                }
+                else {
+                    // 意料之外的事情发生
+                    $(status_div.childNodes[3]).text('Result: ' + data['state']);
+                }
+            }
+            else {
+                // 2秒后再次运行
+                setTimeout(function () {
+                    update_progress(status_url, status_div);
+                }, 1000);
+            }
+        });
+    } 
+</script>

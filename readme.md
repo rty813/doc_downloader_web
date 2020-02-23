@@ -3,4 +3,4 @@
 
 本仓库为doc_downloader的网页版本，采用Flask框架搭建，并且用到了redis和celery。了解详细内容，可以访问[doc_downloader](https://github.com/rty813/doc_downloader)
 
-本仓库对应的网页下载器网址为：[http://jdoufu.xyz](http://jdoufu.xyz)
+本仓库对应的网页下载器网址为：[http://129.211.158.185/](http://129.211.158.185/)

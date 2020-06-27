@@ -40,8 +40,12 @@ def download(url, callback):
         return book118_PPT.download(url, callback)
     time.sleep(2)
 
-    driver.find_element_by_id("agree_full").click()
-    time.sleep(1)
+    try:
+        driver.find_element_by_id("agree_full").click()
+    except:
+        driver.find_elements_by_class_name('big')[0].click()
+    finally:
+        time.sleep(1)
 
     driver.get(driver.find_element_by_id(
         "layer_new_view_iframe").get_attribute("src"))
